@@ -4,7 +4,7 @@ library(grid)
 library(Hmisc)
 library(corrgram)
 
-
+source("PlotCorrelation.R")
 
 options(shiny.maxRequestSize=100*1024^2) # max file size is 100Mb
 
@@ -13,8 +13,8 @@ shinyServer(function(input,output,session){
 
 datasetInput <- reactive({ 
                             
-  example<-mtcars
-#example<-read.table("E:\\Program Files\\R\\R-3.1.0\\library\\shiny\\examples\\ROCplot\\data\\test.txt",header=F,sep="\t",stringsAsFactors=F)
+  
+example<-read.table("test.txt",header=T,sep="\t",row.names=1,stringsAsFactors=F)
  	inFile <- input$file1
   if (!is.null(inFile)){			
    data<-read.table(inFile$datapath, header=input$header, sep=input$sep, quote=input$quote,stringsAsFactors=F,row.names=1) 
@@ -96,7 +96,7 @@ output$downloadmatrix <- downloadHandler(
     }
   )
  
-
+#cor matrix plot 
 output$plot <- renderPlot({
   data<-datasetInput()
   
@@ -109,8 +109,73 @@ output$plot <- renderPlot({
            main="correlation Plot (unsorted)")
   print(p)
 }) 
+
+#scater plot 
+scatterplotfunction=reactive({
+  data<-datasetInput()
+  name1=input$select1
+  name2=input$select2
+  p=correlationScatterPlot(data,name1,name2,input$method)
+  return(p)
+})
+output$scatterplot <- renderPlot({
   
+  print(scatterplotfunction())
+},height=800,width=800)
+
  
+#dynamic UI for scatter plot 
+output$analysisUI <- renderUI({
+  df=datasetInput()
+  tagList(
+  selectInput("select1","Column 1",choices = names(df),selected = names(df)[1]),
+  selectInput("select2","Column 2",choices = names(df),selected = names(df)[2])
+  )
+})
+
+## download function for scatter plot 
+
+output$downloadDataPNG <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.png', sep='-')
+  },
+  
+  content = function(file) {
+    #Cairo(file=file, width = 600, height = 600,type = "png", units = "px", pointsize = 12, bg = "white", res = NA)
+    png(file=file, res = 300)
+    print(scatterplotfunction())
+    dev.off()
+  },
+  contentType = 'image/png'
+)
+
+
+output$downloadDataPDF <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.pdf', sep='-')
+  },
+  
+  content = function(file) {
+    pdf(file)
+    print(scatterplotfunction())
+    dev.off()
+  },
+  contentType = 'image/pdf'
+)
+
+output$downloadDataEPS <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.eps', sep='-')
+  },
+  
+  content = function(file) {
+    postscript(file,width=32,height=48,paper = "special")
+    print(scatterplotfunction())
+    dev.off()
+  },
+  contentType = 'image/eps'
+)
+
  #inout alert
  observe({
    showshinyalert(session, "shinyalert1", "By default, a tab-delmited file with header information is recommanded. alternatively, you can use follow option to parse you data")
