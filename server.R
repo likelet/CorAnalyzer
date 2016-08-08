@@ -137,12 +137,12 @@ output$analysisUI <- renderUI({
 
 output$downloadDataPNG <- downloadHandler(
   filename = function() {
-    paste("output", Sys.time(), '.png', sep='-')
+    paste("output", Sys.time(), '.png', sep='')
   },
   
   content = function(file) {
     #Cairo(file=file, width = 600, height = 600,type = "png", units = "px", pointsize = 12, bg = "white", res = NA)
-    png(file=file, res = 300)
+    png(file=file)
     print(scatterplotfunction())
     dev.off()
   },
@@ -152,7 +152,7 @@ output$downloadDataPNG <- downloadHandler(
 
 output$downloadDataPDF <- downloadHandler(
   filename = function() {
-    paste("output", Sys.time(), '.pdf', sep='-')
+    paste("output", Sys.time(), '.pdf', sep='')
   },
   
   content = function(file) {
@@ -165,11 +165,11 @@ output$downloadDataPDF <- downloadHandler(
 
 output$downloadDataEPS <- downloadHandler(
   filename = function() {
-    paste("output", Sys.time(), '.eps', sep='-')
+    paste("output", Sys.time(), '.eps', sep='')
   },
   
   content = function(file) {
-    postscript(file,width=32,height=48,paper = "special")
+    postscript(file,paper = "special")
     print(scatterplotfunction())
     dev.off()
   },

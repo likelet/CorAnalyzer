@@ -56,11 +56,6 @@ shinyUI(pageWithSidebar(
       )
       
     ),
-    
-    checkboxInput('advance', span('Advanced Option', style = "color:blue"), FALSE),
-    
-    conditionalPanel(
-      condition = "input.advance == true",
       #Size option
       wellPanel(
         selectInput(
@@ -96,7 +91,7 @@ shinyUI(pageWithSidebar(
           strong("Qi Zhao"),
           " from Ren's lab in SYSU."
         ),
-        checkboxInput('plotoption', span('Plot Option', style = "color:red"), FALSE),
+        checkboxInput('plotoption', span('Plot Option for matrix plot', style = "color:red"), FALSE),
         
         conditionalPanel(
           condition = "input.plotoption == true",
@@ -149,7 +144,6 @@ shinyUI(pageWithSidebar(
           )
         )
       )
-    )
   ),
   mainPanel(
     #verbatimTextOutput("test"),
