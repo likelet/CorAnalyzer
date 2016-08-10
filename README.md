@@ -8,7 +8,11 @@ library("Packages for check")
 ```
 Code for install dependencies R packages 
 ```R
+<<<<<<< HEAD
 cDep <- c("ggplot2","shiny",Hmisc","corrgram","shinyBS")
+=======
+cDep <- c("ggplot2","shiny","grid","Hmisc","corrgram","shinyBS")
+>>>>>>> 5dbf49b73f2b71de38879ae8480d0a1ecdc35556
 
 ###INSTALLED PACKAGES
 #get installed list
