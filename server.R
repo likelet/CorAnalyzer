@@ -1,8 +1,9 @@
 library(shiny)
 library(ggplot2)
-library(grid)
 library(Hmisc)
 library(corrgram)
+library(pheatmap)
+library(RColorBrewer)
 
 source("PlotCorrelation.R")
 
@@ -171,6 +172,112 @@ output$downloadDataEPS <- downloadHandler(
   content = function(file) {
     postscript(file,paper = "special")
     print(scatterplotfunction())
+    dev.off()
+  },
+  contentType = 'image/eps'
+)
+
+
+##########################
+####heat Map function
+##########################
+
+colorInput<-reactive({
+  
+  if(input$HeatmapColor=="SelfDefine"){
+    
+    color = colorRampPalette(c(input$mincolor, input$midcolor, input$maxcolor))(100)
+    
+  }else if(input$HeatmapColor=="BuYlRd"){
+    color=colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(100)
+  }else{
+    color=colorRampPalette(brewer.pal(9, input$HeatmapColor))(100)
+  }
+  color
+})
+
+#heatmap function
+Corheatmap<-function(){
+  data<-getcorMatrix()
+  test<-data.matrix(data)
+  if(input$cluster=="All"){
+    crows = TRUE
+    c_cols = TRUE
+  }else if(input$cluster=="A"){
+    crows = TRUE
+    c_cols = FALSE
+  }else if(input$cluster=="B"){
+    crows = FALSE
+    c_cols = TRUE
+  }else{
+    crows = FALSE
+    c_cols = FALSE
+  }
+  
+    pheatmap(test,
+             color=colorInput(),
+             cellwidth = input$cellwidth, 
+             cellheight = input$cellheight, 
+             border_color=input$border,
+             scale=input$scaleoption,
+             cluster_rows = crows, cluster_cols = c_cols,
+             main = input$plottittle,
+             fontsize=input$mainsize,
+             fontsize_row=input$fontsizerow,
+             fontsize_col=input$fontsizecol,
+             legend=input$displaycolorkey,
+             display_numbers=input$displaynumbers,
+             fontsize_number=input$fontsizenumber
+    ) 
+  
+  
+  
+}
+
+output$heatmapplot<-renderPlot({
+  Corheatmap()
+  
+},height=800,width=800)
+
+
+
+#download function
+output$downloadDataHeatPNG <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.png', sep='')
+  },
+  
+  content = function(file) {
+    #Cairo(file=file, width = 600, height = 600,type = "png", units = "px", pointsize = 12, bg = "white", res = NA)
+    png(file=file)
+    print(Corheatmap())
+    dev.off()
+  },
+  contentType = 'image/png'
+)
+
+
+output$downloadDataheatPDF <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.pdf', sep='')
+  },
+  
+  content = function(file) {
+    pdf(file)
+    print(Corheatmap())
+    dev.off()
+  },
+  contentType = 'image/pdf'
+)
+
+output$downloadDataheatEPS <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.eps', sep='')
+  },
+  
+  content = function(file) {
+    postscript(file,paper = "special")
+    print(Corheatmap())
     dev.off()
   },
   contentType = 'image/eps'
