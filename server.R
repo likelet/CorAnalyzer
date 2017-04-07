@@ -170,7 +170,7 @@ output$downloadDataEPS <- downloadHandler(
   },
   
   content = function(file) {
-    postscript(file,paper = "special")
+    postscript(file,fonts=c("serif", "Palatino","Times"))
     print(scatterplotfunction())
     dev.off()
   },
@@ -276,7 +276,7 @@ output$downloadDataheatEPS <- downloadHandler(
   },
   
   content = function(file) {
-    postscript(file,paper = "special")
+    postscript(file,fonts=c("serif", "Palatino","Times"))
     print(Corheatmap())
     dev.off()
   },
