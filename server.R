@@ -4,7 +4,7 @@ library(Hmisc)
 library(corrgram)
 library(pheatmap)
 library(RColorBrewer)
-
+library(corrplot)
 source("PlotCorrelation.R")
 
 options(shiny.maxRequestSize=100*1024^2) # max file size is 100Mb
@@ -282,6 +282,68 @@ output$downloadDataheatEPS <- downloadHandler(
   },
   contentType = 'image/eps'
 )
+
+#corrplot-----------
+Corplot<-function(){
+  data<-getcorMatrix()
+  test<-data.matrix(data)
+  M <- cor(test)
+  corrplot.mixed(M, lower = input$CorparaLower,upper=input$CorparaUpper)
+  
+}
+
+output$Corrplot<-renderPlot({
+  Corplot()
+  
+},height=800,width=800)
+
+#corrplot map download----
+#download function
+output$downloadDataCorPNG <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.png', sep='')
+  },
+  
+  content = function(file) {
+    #Cairo(file=file, width = 600, height = 600,type = "png", units = "px", pointsize = 12, bg = "white", res = NA)
+    png(file=file)
+    Corplot()
+    dev.off()
+  },
+  contentType = 'image/png'
+)
+
+
+output$downloadDataCorPDF <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.pdf', sep='')
+  },
+  
+  content = function(file) {
+    pdf(file)
+    Corplot()
+    dev.off()
+  },
+  contentType = 'image/pdf'
+)
+
+output$ddownloadDataCorEPS <- downloadHandler(
+  filename = function() {
+    paste("output", Sys.time(), '.eps', sep='')
+  },
+  
+  content = function(file) {
+    postscript(file,paper = "special")
+    Corplot()
+    dev.off()
+  },
+  contentType = 'image/eps'
+)
+
+
+
+
+
 
  #inout alert
  observe({

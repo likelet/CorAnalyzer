@@ -212,6 +212,37 @@ shinyUI(pageWithSidebar(
       checkboxInput("displaycolorkey", strong("Display Colorkey"), TRUE),
       checkboxInput("displaynumbers", strong("Display numbers"), FALSE)
     ),
+    conditionalPanel(condition = "input.conditionedPanels == 'Corplot'",
+                     #gsub("label class=\"radio\"", "label class=\"radio inline\"",radioButtons("overlapnumber", h6("Get over lap of your data list"), c(twoList = 2, threeList = 3,fourList=4,fiveList = 5),selected = 5)),
+                     selectInput(
+                       "CorparaLower",
+                       "Corplot Methods lower",
+                       choices = c(
+                         "circle",
+                         "square",
+                         "ellipse",
+                         "number",
+                         "shade",
+                         "color",
+                         "pie"
+                       ),
+                       selected = "circle"
+                     ),
+                     selectInput(
+                       "CorparaUpper",
+                       "Corplot Methods Upper",
+                       choices = c(
+                         "circle",
+                         "square",
+                         "ellipse",
+                         "number",
+                         "shade",
+                         "color",
+                         "pie"
+                       ),
+                       selected = "circle"
+                     )
+                     ),
     #Size option
     wellPanel(selectInput(
         "iscolumn",
@@ -342,6 +373,17 @@ shinyUI(pageWithSidebar(
         "Matrix plot",
         shinyalert("shinyalert6"),
         plotOutput("plot", height = 800, width = "auto")
+      ),
+      tabPanel(
+        "Corplot",
+        p("The corrplot package is a graphical display of a correlation matrix, confidence interval. It also contains some algorithms to do matrix reordering. In addition, corrplot is good at details, including choosing color, text labels, color labels, layout, etc."),
+        h4("Fecth plot"),
+        wellPanel(
+          downloadButton('downloadDataCorPNG', 'Download PNG-file'),
+          downloadButton('downloadDataCorPDF', 'Download PDF-file'),
+          downloadButton('downloadDataCorEPS', 'Download EPS-file')
+        ),
+        plotOutput("Corrplot", height = 800, width = "auto")
       )
       ,
       id = "conditionedPanels"
