@@ -1,10 +1,10 @@
 CorAnalyzer
 =============
-<p> CorAnalyzer is a shiny app, which were developed for interactive generating correlation scatter plot from matrix data set.</p>
+CorAnalyzer is a shiny app, which were developed for interactive generating correlation scatter plot from matrix data set.
 
 ### Install dependencies
 
-To check the dependencies installed correctly, this command can help users to check the status of each installation<br/>
+To check the dependencies installed correctly, this command can help users to check the status of each installation
 
 ```R
 library("Packages for check")
@@ -34,7 +34,7 @@ devtools::install_github("AnalytixWare/ShinySky")
 ```
 
 ### Designers:
-Qi Zhao, zhaoqi3@mail2.sysu.edu.cn<br/>
+Qi Zhao, zhaoqi3@mail2.sysu.edu.cn
 
 ### Developers:
 Qi Zhao, zhaoqi3@mail2.sysu.edu.cn <br/>
